@@ -29,4 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::post('articles', 'ArticleController@store')->name('articles.store');
     Route::get('articles/{article}', 'ArticleController@show')->name('articles.show');
     Route::patch('articles/{article}', 'ArticleController@update')->name('articles.update');
+    
+
+    Route::post('comments/create', 'CommentController@store')->name('comment.create');
 });
