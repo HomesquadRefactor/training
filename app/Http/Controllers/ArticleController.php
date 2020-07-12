@@ -10,7 +10,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::with('author')->get();
+        $articles = Article::with(['author', 'comments.user'])->get();
 
         return view('articles.index', compact('articles'));
     }
