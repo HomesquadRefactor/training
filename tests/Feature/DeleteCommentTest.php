@@ -7,7 +7,9 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 use App\Comment;
+use App\User;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 class DeleteCommentTest extends TestCase
 {
@@ -17,7 +19,6 @@ class DeleteCommentTest extends TestCase
         
         $this->signIn();
 
-        Session::start(); // starts session, this is what handles csrf token part
         
     }
 
@@ -30,6 +31,8 @@ class DeleteCommentTest extends TestCase
             'user_id' => auth()->user()->id
         ]);
 
+        // dd(Comment::get());
+
         // $this->assertDatabaseHas('comments', (array) $comment);
 
         // $array_comment = (array) $comment;
@@ -39,7 +42,21 @@ class DeleteCommentTest extends TestCase
 
         $this->delete("articles/comment-delete/{$comment->id}", (array) $comment);
         
-        $this->assertDatabaseHas('comments', (array) $comment);
+        // dd(Comment::get());
+        
+        $this->assertDatabaseCount('comments', 0);
+    }
 
+    /** @test */
+    public function a_user_can_delete_his_comment()
+    {
+        $user = create(User::class);
+
+        $comment = create(Comment::class, [
+            'user_id' => $user->id
+        ]);
+
+        $this->delete("articles/comment-delete/{$comment->id}", (array) $comment)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

@@ -55,7 +55,11 @@ class UpdateCommentTest extends TestCase
             'message' => 'Updated message'
         ];
 
-        $this->patch("articles/comment/{$comment->id}", $updated)
+        // $test = Comment::get();
+
+        // dd($test);
+
+        $this->patch("articles/comment-update/{$comment->id}", $updated)
             ->assertStatus(Response::HTTP_FORBIDDEN);
 
     }

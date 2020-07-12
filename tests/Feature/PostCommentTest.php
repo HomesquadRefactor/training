@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Article;
+use App\Comment;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -20,11 +23,24 @@ class PostCommentTest extends TestCase
         $this->withoutExceptionHandling();
 
         // given
-        $comment = [
-            'message' => 'Hello',
-            'user_id' => '1',
-            'article_id' => '1'
-        ];
+        // $comment = [
+        //     'message' => 'Hello',
+        //     'user_id' => '1',
+        //     'article_id' => '1'
+        // ];
+
+        // author of the article
+        $user = create(User::class);
+
+        // the article 
+        $article = create(Article::class, [
+            'user_id' => $user->id
+        ]);
+
+        $comment = raw(Comment::class, [
+            'user_id' => auth()->user()->id,
+            'article_id' => $article->id
+        ]);
 
         // when
         $response = $this->post('/articles/comment', $comment);
